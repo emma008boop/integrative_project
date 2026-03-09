@@ -8,10 +8,9 @@ import lombok.*;
 @Entity
 @Getter
 @Setter
-@RequiredArgsConstructor
 @AllArgsConstructor
 @NoArgsConstructor
-@Table (name = "user")
+@Table (name = "users")
 public class User {
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
@@ -23,4 +22,10 @@ public class User {
 
     @NotBlank (message = "password is required")
     private String passwordHash;
+
+    @OneToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "profile_id", referencedColumnName = "id")
+    private UserProfile profile;
+
+
 }
