@@ -5,6 +5,7 @@ import com.myapp.gestor.dto.auth.LoginUserResponse;
 import com.myapp.gestor.dto.auth.RegisterUserRequest;
 import com.myapp.gestor.dto.auth.RegisterUserResponse;
 import com.myapp.gestor.exception.EmailNotFoundException;
+import com.myapp.gestor.exception.InvalidCredentialsException;
 import com.myapp.gestor.model.User;
 import com.myapp.gestor.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,15 +33,11 @@ public class AuthUserService implements AuthUserServiceInterface {
     }
 
     public LoginUserResponse login (LoginUserRequest dto){
-        User user = new User();
-
-        if (repository.existByEmail(dto.email())){
-            throw new EmailNotFoundException("Your email hasn't been found in database, please confirm your email");
+        User user = repository.findByEmail(dto.email())
+                .orElseThrow(() -> new EmailNotFoundException("The following email:" + dto.email() + "was not found"));
+        if (!passwordEncoder.matches(dto.password(), user.getPasswordHash())) {
+            throw new InvalidCredentialsException("Your password is incorrect");
         }
-//        boolean isPasswordCorrect = passwordEncoder.matches(dto.password(), user.getPasswordHash());
-//        if (!isPasswordCorrect){
-//            throw new RuntimeException("Password does not match");
-//        }
         return new LoginUserResponse("The login has been successfully done");
     }
 }
