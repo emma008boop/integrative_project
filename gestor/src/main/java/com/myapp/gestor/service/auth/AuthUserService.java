@@ -30,16 +30,17 @@ public class AuthUserService implements AuthUserServiceInterface {
 
         return new RegisterUserResponse(dto.email());
     }
+
     public LoginUserResponse login (LoginUserRequest dto){
         User user = new User();
 
         if (repository.existByEmail(dto.email())){
             throw new EmailNotFoundException("Your email hasn't been found in database, please confirm your email");
         }
-        boolean isPasswordCorrect = passwordEncoder.matches(dto.password(), user.getPasswordHash());
-        if (!isPasswordCorrect){
-            throw new RuntimeException("Password does not match");
-        }
+//        boolean isPasswordCorrect = passwordEncoder.matches(dto.password(), user.getPasswordHash());
+//        if (!isPasswordCorrect){
+//            throw new RuntimeException("Password does not match");
+//        }
         return new LoginUserResponse("The login has been successfully done");
     }
 }
