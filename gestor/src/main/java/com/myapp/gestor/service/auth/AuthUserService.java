@@ -21,7 +21,7 @@ public class AuthUserService implements AuthUserServiceInterface {
     private PasswordEncoder passwordEncoder;
 
     public RegisterUserResponse register (RegisterUserRequest dto){
-        if (repository.existByEmail(dto.email())){
+        if (repository.existsByEmail(dto.email())){
             throw new EmailNotFoundException("You can't use the email:" + dto.email() + "cause already exists");
         }
         User user = new User();
