@@ -18,7 +18,7 @@ public class UserProfile {
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     private Long id;
 
-
+    @Builder.Default
     private Integer streaks = 0;
 
     @NotBlank(message = "The currency must be selected")
