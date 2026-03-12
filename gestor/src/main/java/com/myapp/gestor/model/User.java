@@ -23,8 +23,7 @@ public class User {
     @NotBlank (message = "password is required")
     private String passwordHash;
 
-    @OneToOne(cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "profile_id", referencedColumnName = "id")
+    @OneToOne(cascade = CascadeType.REMOVE, mappedBy = "user")
     private UserProfile profile;
 
 

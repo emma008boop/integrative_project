@@ -13,15 +13,13 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Setter
 @Getter
+@Entity
 @Table (name = "items")
 public class Items {
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_profile_id", referencedColumnName = "id")
-    private UserProfile userProfile;
 
     @NotBlank(message = "Item's description is required")
     private String description;
@@ -42,5 +40,8 @@ public class Items {
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
+    @ManyToOne
+    @JoinColumn(name = "user_profile_id", referencedColumnName = "id")
+    private UserProfile userProfile;
 
 }
