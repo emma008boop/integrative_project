@@ -8,6 +8,7 @@ import com.myapp.gestor.exception.EmailNotFoundException;
 import com.myapp.gestor.exception.InvalidCredentialsException;
 import com.myapp.gestor.model.User;
 import com.myapp.gestor.repository.UserRepository;
+import com.myapp.gestor.service.UserValidationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,8 @@ public class AuthUserService implements AuthUserServiceInterface {
     private UserRepository repository;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private UserValidationService validationService;
 
     public RegisterUserResponse register (RegisterUserRequest dto){
         if (repository.existsByEmail(dto.email())){
@@ -35,9 +38,8 @@ public class AuthUserService implements AuthUserServiceInterface {
     public LoginUserResponse login (LoginUserRequest dto){
         User user = repository.findByEmail(dto.email())
                 .orElseThrow(() -> new EmailNotFoundException("The following email:" + dto.email() + "was not found"));
-        if (!passwordEncoder.matches(dto.password(), user.getPasswordHash())) {
-            throw new InvalidCredentialsException("Your password is incorrect");
-        }
+        validationService.validatePassword(dto.password(), user.getPasswordHash());
+
         return new LoginUserResponse("The login has been successfully done");
     }
 }
